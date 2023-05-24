@@ -14,5 +14,7 @@ public class PointSpawner : Entity
         {
             world.Instantiate(new Point());
         }
+
+        world.Destroy(this);
     }
 }

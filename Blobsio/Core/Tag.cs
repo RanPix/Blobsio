@@ -6,5 +6,5 @@ public enum Tag
     Blob,
     Friend,
     Point,
-    Bush,
+    Spike,
 }

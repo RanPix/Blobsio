@@ -3,7 +3,6 @@ using SFML.System;
 using SFML.Graphics;
 using Blobsio.Core.Extentions;
 using Blobsio.Core.Interfaces;
-using SFML.Window;
 
 namespace Blobsio.Assets;
 
@@ -13,10 +12,12 @@ public class Blob : Entity, IUpdatable, IDrawable
     public int size = 20;
     public float speed = 700;
 
+    private float cameraFOV = 1f;
+
     private float aiDirectionChangeTime = 2f; // це для примітивного ші
     private float aiDirectionChangeTimer = 2f;
 
-    Vector2f aiInput;
+    private Vector2f aiInput;
 
     public override void Start()
     {
@@ -24,10 +25,16 @@ public class Blob : Entity, IUpdatable, IDrawable
 
         tag = Tag.Blob;
 
-        graphic = new CircleShape(size, 30);
+        CircleShape shape = new CircleShape(size, 30);
+        graphic = shape;
+
         collider = size * 0.8f;
         position = position;
         graphic.Origin = new Vector2f(size, size);
+
+        Renderer.mainCamera.Zoom(cameraFOV);
+
+        Respawn();
 
         if (!isAI)
             Input.MovementInput += MovePlayer;
@@ -61,6 +68,14 @@ public class Blob : Entity, IUpdatable, IDrawable
             point.Respawn();
 
             AddSize(1);
+        }
+
+        if (collision.tag == Tag.Spike && size > 200)
+        {
+            Spike spike = (Spike)collision;
+
+            spike.Respawn();
+            AddSize(-size / 2);
         }
     }
 
@@ -112,7 +127,7 @@ public class Blob : Entity, IUpdatable, IDrawable
 
     private void AddSize(int amount)
     {
-        size += amount;
+        size = Math.Clamp(size + amount, 20, 10000000);
 
         CircleShape currentGraphic = (CircleShape)graphic;
         currentGraphic.Radius = size;
@@ -120,6 +135,10 @@ public class Blob : Entity, IUpdatable, IDrawable
         graphic.Origin = new Vector2f(size, size);
 
         collider = size * 0.8f;
+
+        //cameraFOV = 1 + size / 1000 * 0.2f;
+        //Console.WriteLine(cameraFOV);
+        //Renderer.mainCamera.Zoom(cameraFOV);
     }
 
     private void Respawn()
@@ -128,6 +147,7 @@ public class Blob : Entity, IUpdatable, IDrawable
         AddSize(0);
 
         position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+        
 
         if (!isAI)
         {

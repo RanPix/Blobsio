@@ -1,8 +1,6 @@
 ﻿global using Time = Blobsio.Core.Time;
-using Blobsio.Assets;
 using Blobsio.Core.Interfaces;
 using SFML.Graphics;
-using SFML.System;
 using SFML.Window;
 
 namespace Blobsio.Core;

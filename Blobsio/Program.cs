@@ -9,6 +9,22 @@ static class Program
     {
         new PointSpawner(),
 
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+        new Spike(),
+
+
         new Blob(),
         new Blob() { isAI = true },
         new Blob() { isAI = true },

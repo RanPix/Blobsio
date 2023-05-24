@@ -49,11 +49,6 @@ public class Input
         return input.Normalize();
     }
 
-    private Vector2f GetMouseMovementInput()
-    {
-        // не зважайте
-        Vector2f input = ((Vector2f)(Mouse.GetPosition(window) - (Vector2i)window.Size / 2)).Normalize();
-
-        return input;
-    }
+    private Vector2f GetMouseMovementInput() // не зважайте
+        => ((Vector2f)(Mouse.GetPosition(window) - (Vector2i)window.Size / 2)).Normalize();
 }
