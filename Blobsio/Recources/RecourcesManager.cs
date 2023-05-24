@@ -1,6 +1,6 @@
-﻿using SFML_Thing.Core;
+﻿using Blobsio.Core;
 
-namespace SFML_Thing.Recources;
+namespace Blobsio.Recources;
 
 public static class RecourcesManager
 {

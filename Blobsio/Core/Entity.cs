@@ -5,10 +5,13 @@ namespace Blobsio.Core;
 
 public abstract class Entity
 {
-    public Tag tag = Tag.None;
-    public Transformable graphic = new CircleShape(10f, 3);
+    protected Game world;
 
-    public Vector2f collider;
+    public Tag tag = Tag.None;
+    public Transformable graphic = new Transformable();
+
+    public float collider;
+    public bool processCollision = true;
 
     private Vector2f _position;
     public Vector2f position
@@ -21,12 +24,12 @@ public abstract class Entity
         }
     }
 
-    public virtual void Start()
+    public void OnInstantiate(Game g)
     {
-
+        world = g;
     }
 
-    public virtual void Update()
+    public virtual void Start()
     {
 
     }
@@ -36,7 +39,7 @@ public abstract class Entity
     
     }
 
-    public virtual void OnCollisionEnter(Entity collision)
+    public virtual void OnCollision(Entity collision)
     {
 
     }

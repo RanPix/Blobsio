@@ -1,4 +1,4 @@
-﻿namespace SFML_Thing.Core;
+﻿namespace Blobsio.Core;
 
 public static class ErrorHandler
 {

@@ -13,27 +13,28 @@ public class Physics
                 if (i == j)
                     continue;
 
+                if (!objects[i].processCollision)
+                    continue;
+                
                 if (CheckCollision(objects[i].collider, objects[i].position, objects[j].collider, objects[j].position))
                 {
-                    objects[i].OnCollisionEnter(objects[j]);
+                    objects[i].OnCollision(objects[j]);
                 }
             }
         }
     }
 
-    private bool CheckCollision(Vector2f coll1, Vector2f coll1Pos, Vector2f coll2, Vector2f coll2Pos)
+    private bool CheckCollision(float coll1, Vector2f coll1Pos, float coll2, Vector2f coll2Pos)
     {
-        Vector2f coll1TopLeft = coll1Pos - coll1;
-        Vector2f coll1BottomRight = coll1Pos + coll1;
+        float minDistance = coll1 + coll2;
+        float minDistance2 = minDistance * minDistance;
 
-        Vector2f coll2TopLeft = coll2Pos - coll2;
-        Vector2f coll2BottomRight = coll2Pos + coll2;
+        float xSeparation = coll1Pos.X - coll2Pos.X;
+        float ySeparation = coll1Pos.Y - coll2Pos.Y;
 
-        if (coll1TopLeft.X < coll2BottomRight.X &&
-            coll1BottomRight.X > coll2TopLeft.X &&
+        float separation2 = (xSeparation * xSeparation) + (ySeparation * ySeparation);
 
-            coll1TopLeft.Y < coll2BottomRight.Y &&
-            coll1BottomRight.Y > coll2TopLeft.Y)
+        if (separation2 < minDistance2)
             return true;
 
         return false;

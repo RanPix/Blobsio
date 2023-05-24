@@ -3,7 +3,8 @@
 public enum Tag
 {
     None = 0,
-    Paddle,
-    Ball,
-    Coin,
+    Blob,
+    Friend,
+    Point,
+    Bush,
 }

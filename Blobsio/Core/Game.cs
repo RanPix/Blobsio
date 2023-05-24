@@ -1,31 +1,32 @@
 ﻿global using Time = Blobsio.Core.Time;
+using Blobsio.Assets;
+using Blobsio.Core.Interfaces;
 using SFML.Graphics;
+using SFML.System;
 using SFML.Window;
-using SFML_Thing.Core;
-using System.ComponentModel;
 
 namespace Blobsio.Core;
 
 public class Game
 {
-    public static Game instance;
-
     private RenderWindow window = new RenderWindow(new VideoMode(Renderer.windowX, Renderer.windowY), "PingPong");
 
     private Renderer renderer = new Renderer();
     private Physics physics = new Physics();
     private Input input = new Input();
 
+    public const float MAP_SIZE = 5000f;
+
     private List<Entity> entities = new List<Entity>();
+    private List<IUpdatable> updatables = new List<IUpdatable>();
+    private List<IDrawable> drawables = new List<IDrawable>();
+
+    private List<Entity> newEntities = new List<Entity>();
+    private List<IUpdatable> newUpdatables = new List<IUpdatable>();
+    private List<IDrawable> newDrawables = new List<IDrawable>();
 
     public Game(List<Entity> entities)
     {
-        if (instance == null)
-            instance = this;
-
-        else
-            throw new Exception("CANNOT HAVE MORE THAN ONE INSTANCE OF THE GAME");
-
         this.entities = entities;
     }
 
@@ -35,6 +36,8 @@ public class Game
         Time.Start();
         renderer.Start(window);
         input.Start(window);
+
+        InitializeEntities();
         Start();
 
         while (true)
@@ -51,21 +54,63 @@ public class Game
 
     private void Start()
     {
-        foreach (Entity entity in entities)
+        for (int i = 0; i < entities.Count; i++)
         {
-            entity.Start();
+            entities[i].Start();
         }
     }
 
     private void Update()
     {
-        foreach (Entity entity in entities)
+        for (int i = 0; i < updatables.Count; i++)
         {
-            entity.Update();
+            updatables[i].Update();
         }
     }
 
+    private void InitializeEntities()
+    {
+        for (int i = 0; i < entities.Count; i++)
+        {
+            entities[i].OnInstantiate(this);
+
+            if (entities[i] is IUpdatable)
+                updatables.Add((IUpdatable)entities[i]);
+
+            if (entities[i] is IDrawable)
+                drawables.Add((IDrawable)entities[i]);
+        }
+    }
 
     public Entity FindByTag(Tag tag)
         => entities.Find(x => x.tag == tag);
+
+    public Entity Instantiate(Entity e)
+    {
+        entities.Add(e);
+        
+        if (e is IUpdatable)
+            updatables.Add((IUpdatable)e);
+
+        if (e is IDrawable)
+            drawables.Add((IDrawable)e);
+
+        e.Start();
+        e.OnInstantiate(this);
+
+        return e;
+    }
+
+    public void Destroy(Entity e)
+    {
+        e.OnDestroy();
+
+        entities.Remove(e);
+
+        if (e is IUpdatable)
+            updatables.Remove((IUpdatable)e);
+
+        if (e is IDrawable)
+            drawables.Remove((IDrawable)e);
+    }
 }
