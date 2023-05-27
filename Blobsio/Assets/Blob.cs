@@ -135,6 +135,10 @@ public class Blob : Entity, IUpdatable, IDrawable
         Entity[] blobs = world.FindEntitiesByTag(Tag.Blob);
 
         Blob newBody = (Blob)blobs[Rand.rand.Next(0, blobs.Length - 1)];
+
+        if (newBody == this)
+            return;
+            
         newBody.SetAI(false);
 
         SetAI(true);
