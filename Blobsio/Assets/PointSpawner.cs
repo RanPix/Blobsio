@@ -4,7 +4,7 @@ namespace Blobsio.Assets;
 
 public class PointSpawner : Entity
 {
-    private int maxPointsAmount = 2000;
+    private int maxPointsAmount = 1000;
 
     public override void Start()
     {

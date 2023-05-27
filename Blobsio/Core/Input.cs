@@ -1,6 +1,7 @@
 ﻿using SFML.System;
 using SFML.Window;
 using Blobsio.Core.Extentions;
+using System.Runtime.CompilerServices;
 
 namespace Blobsio.Core;
 
@@ -9,6 +10,7 @@ public class Input
     private Window window;
 
     public static Action<Vector2f> MovementInput;
+    public static Action<bool> BlobSwap;
 
     public void Start(Window window)
     {
@@ -20,6 +22,12 @@ public class Input
         window.DispatchEvents();
 
         GetMovementInput();
+        GetBlobSwapInput();
+    }
+
+    private void GetBlobSwapInput()
+    {
+        BlobSwap.Invoke(GetKeyboardBlobSwap());
     }
 
 
@@ -51,4 +59,7 @@ public class Input
 
     private Vector2f GetMouseMovementInput() // не зважайте
         => ((Vector2f)(Mouse.GetPosition(window) - (Vector2i)window.Size / 2)).Normalize();
+
+    private bool GetKeyboardBlobSwap()
+        => Keyboard.IsKeyPressed(Keyboard.Key.F);
 }

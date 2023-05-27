@@ -38,6 +38,9 @@ public class Blob : Entity, IUpdatable, IDrawable
 
         if (!isAI)
             Input.MovementInput += MovePlayer;
+
+        if (!isAI)
+            Input.BlobSwap += SwapBlobs;
     }
 
     public void Update()
@@ -124,6 +127,34 @@ public class Blob : Entity, IUpdatable, IDrawable
         return newVelocity;
     }
 
+    private void SwapBlobs(bool b)
+    {
+        if (!b)
+            return;
+
+        Entity[] blobs = world.FindEntitiesByTag(Tag.Blob);
+
+        Blob newBody = (Blob)blobs[Rand.rand.Next(0, blobs.Length - 1)];
+        newBody.SetAI(false);
+
+        SetAI(true);
+    }
+
+    public void SetAI(bool b)
+    {
+        isAI = b;
+
+        if (isAI)
+        {
+            Input.MovementInput -= MovePlayer;
+            Input.BlobSwap -= SwapBlobs;
+        }
+        else
+        {
+            Input.MovementInput += MovePlayer;
+            Input.BlobSwap += SwapBlobs;
+        }
+    }
 
     private void AddSize(int amount)
     {
