@@ -1,5 +1,4 @@
 ﻿global using Time = Blobsio.Core.Time;
-using Blobsio.Core.Interfaces;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -16,12 +15,8 @@ public class Game
     public const float MAP_SIZE = 5000f;
 
     private List<Entity> entities = new List<Entity>();
-    private List<IUpdatable> updatables = new List<IUpdatable>();
-    private List<IDrawable> drawables = new List<IDrawable>();
-
     private List<Entity> newEntities = new List<Entity>();
-    private List<IUpdatable> newUpdatables = new List<IUpdatable>();
-    private List<IDrawable> newDrawables = new List<IDrawable>();
+    private List<Entity> pendingEntitiesToDestroy = new List<Entity>(); 
 
     public Game(List<Entity> entities)
     {
@@ -36,33 +31,54 @@ public class Game
         input.Start(window);
 
         InitializeEntities();
-        Start();
 
-        while (true)
+        while (window.IsOpen)
         {
             Time.Update();
 
-            renderer.Render(entities.ToArray());
             physics.Update(entities.ToArray());
 
             input.Update();
+            Start();
             Update();
+            Destroy();
+
+            renderer.Render(entities.ToArray());
         }
     }
 
     private void Start()
     {
-        for (int i = 0; i < entities.Count; i++)
+        if (newEntities.Count == 0)
+            return;
+        
+        for (int i = 0; i < newEntities.Count; i++)
         {
-            entities[i].Start();
+            newEntities[i].Start();
         }
+
+        entities.AddRange(newEntities);
+        newEntities.Clear();
+    }
+
+    private void Destroy()
+    {
+        if (pendingEntitiesToDestroy.Count == 0)
+            return;
+        
+        for (int i = 0; i < pendingEntitiesToDestroy.Count; i++)
+        {
+            entities.Remove(pendingEntitiesToDestroy[i]);
+        }
+
+        pendingEntitiesToDestroy.Clear();
     }
 
     private void Update()
     {
-        for (int i = 0; i < updatables.Count; i++)
+        for (int i = 0; i < entities.Count; i++)
         {
-            updatables[i].Update();
+            entities[i].Update();
         }
     }
 
@@ -71,12 +87,7 @@ public class Game
         for (int i = 0; i < entities.Count; i++)
         {
             entities[i].OnInstantiate(this);
-
-            if (entities[i] is IUpdatable)
-                updatables.Add((IUpdatable)entities[i]);
-
-            if (entities[i] is IDrawable)
-                drawables.Add((IDrawable)entities[i]);
+            entities[i].Start();
         }
     }
 
@@ -85,15 +96,8 @@ public class Game
 
     public Entity Instantiate(Entity e)
     {
-        entities.Add(e);
-        
-        if (e is IUpdatable)
-            updatables.Add((IUpdatable)e);
+        newEntities.Add(e);
 
-        if (e is IDrawable)
-            drawables.Add((IDrawable)e);
-
-        e.Start();
         e.OnInstantiate(this);
 
         return e;
@@ -101,14 +105,6 @@ public class Game
 
     public void Destroy(Entity e)
     {
-        e.OnDestroy();
-
-        entities.Remove(e);
-
-        if (e is IUpdatable)
-            updatables.Remove((IUpdatable)e);
-
-        if (e is IDrawable)
-            drawables.Remove((IDrawable)e);
+        pendingEntitiesToDestroy.Add(e);
     }
 }
