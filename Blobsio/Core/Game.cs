@@ -91,8 +91,11 @@ public class Game
         }
     }
 
-    public Entity FindByTag(Tag tag)
+    public Entity FindEntitiyByTag(Tag tag)
         => entities.Find(x => x.tag == tag);
+
+    public Entity[] FindEntitiesByTag(Tag tag)
+        => entities.FindAll(x => x.tag == tag).ToArray();
 
     public Entity Instantiate(Entity e)
     {

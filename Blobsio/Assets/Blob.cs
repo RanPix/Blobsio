@@ -1,4 +1,4 @@
-﻿using Blobsio.Core;
+using Blobsio.Core;
 using SFML.System;
 using SFML.Graphics;
 using Blobsio.Assets.Controllers;
@@ -91,6 +91,10 @@ public class Blob : Entity
         return newVelocity;
     }
 
+    private void SwapBlobs(bool b)
+    {
+        if (!b)
+            return;
 
     public void ThrowFood(Vector2f direction)
     {

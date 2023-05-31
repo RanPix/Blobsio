@@ -1,6 +1,7 @@
-﻿using SFML.System;
+using SFML.System;
 using SFML.Window;
 using Blobsio.Core.Extentions;
+using System.Runtime.CompilerServices;
 
 namespace Blobsio.Core;
 
