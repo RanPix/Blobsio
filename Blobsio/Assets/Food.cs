@@ -31,7 +31,7 @@ public class Food : Entity
         collider = size + 5;
         processCollision = false;
 
-        speed *= size * 0.1f;
+        speed *= size * 0.2f;
 
         tag = Tag.Point;
 

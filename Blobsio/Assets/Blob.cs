@@ -91,11 +91,6 @@ public class Blob : Entity
         return newVelocity;
     }
 
-    private void SwapBlobs(bool b)
-    {
-        if (!b)
-            return;
-
     public void ThrowFood(Vector2f direction)
     {
         if (size < 100)
