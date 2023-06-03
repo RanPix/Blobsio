@@ -1,5 +1,5 @@
 ﻿using Blobsio.Core;
-using Blobsio.Core.Extentions;
+using SFML.Window;
 using SFML.System;
 
 namespace Blobsio.Assets.Controllers;
@@ -17,7 +17,8 @@ public class BlobPlayerController : BlobController
     public override void SetBlob(Blob b)
     {
         Input.MovementInput += Move;
-        Input.FoodThrowInput += ThrowFood;
+        Input.Create(ThrowFood, Keyboard.Key.F);
+        //Input.FoodThrowInput += ThrowFood;
 
         controlledBlob = b;
     }

@@ -9,6 +9,8 @@ public class Input
 {
     private Window window;
 
+    private static List<InputAction> Inputs = new List<InputAction>();
+
     public void Start(Window window)
     {
         this.window = window;
@@ -18,8 +20,27 @@ public class Input
     {
         window.DispatchEvents();
 
+        foreach (var action in Inputs)
+        {
+            action.Update();
+        }
+
         GetMovementInput();
-        GetFoodThrowInput();
+        //GetFoodThrowInput();
+    }
+
+    public static void Create(Action input, Keyboard.Key bind)
+    {
+        Inputs.Add(new InputAction(input, bind));
+    }
+
+    public static void Remove(Keyboard.Key bind)
+    {
+        for (int i = 0; i < Inputs.Count; i++)
+        {
+            if (Inputs[i].bind == bind)
+                Inputs.RemoveAt(i);
+        }
     }
 
     #region MovementInput
