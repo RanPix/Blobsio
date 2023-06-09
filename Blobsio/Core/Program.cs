@@ -26,7 +26,6 @@ static class Program
 
     static void Main()
     {
-        Game game = new Game(entities);
-        game.Run();
+        Game.Create(entities).Run();
     }
 }

@@ -1,28 +1,26 @@
 ﻿global using Time = Blobsio.Core.Time;
+using Blobsio.Recources;
 using SFML.Graphics;
 using SFML.Window;
+using System.Reflection;
 
 namespace Blobsio.Core;
 
 public class Game
 {
-    private RenderWindow window = new RenderWindow(new VideoMode(Renderer.windowX, Renderer.windowY), "PingPong");
+    private RenderWindow window;
 
     private Renderer renderer = new Renderer();
     private Physics physics = new Physics();
     private Input input = new Input();
 
-    public const float MAP_SIZE = 5000f;
+    public const int MAP_SIZE = 5000;
 
     private List<Entity> entities = new List<Entity>();
     private List<Entity> newEntities = new List<Entity>();
     private List<Entity> pendingEntitiesToDestroy = new List<Entity>(); 
 
-    public Game(List<Entity> entities)
-    {
-        this.entities = entities;
-    }
-
+    private Game() { }
 
     public void Run()
     {
@@ -109,5 +107,70 @@ public class Game
     public void Destroy(Entity e)
     {
         pendingEntitiesToDestroy.Add(e);
+    }
+
+
+    public static Game Create(List<Entity> entities)
+    {
+        Game game = new Game();
+        game.entities = entities;
+        game.LoadCongig();
+
+        return game;
+    }
+
+    private void LoadCongig() // xd
+    {
+        StreamReader reader = new StreamReader(RecourcesManager.GetConfig("config"));
+
+        bool configBroken = false; // я хотів зробити завантаження дефолтного конфігу якщо той зламаний але не допер як то зробити
+
+        while (!reader.EndOfStream && !configBroken)
+        {
+            string[] input = reader.ReadLine().Split(':');
+
+            if (input.Length < 2)
+                continue;
+
+            string name = input[0];
+            string[] values = input[1].Split(',');
+
+            if (values.Length < 0)
+                continue;
+
+            FieldInfo type = GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (type == null)
+                continue;
+
+            switch (type.FieldType.Name.ToString())
+            {
+                case "Int32": // ЧОГО МЕНІ ПРОСТО НЕ ДАДУТЬ НОРМАЛЬНИЙ ТИП А НЕ ЯКЕСЬ ЛАЙНО
+                    if (int.TryParse(input[1], out int value))
+                    {
+                        GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)?
+                            .SetValue(this, value);
+                    }
+                    else
+                        configBroken = true;
+                    break;
+
+                case "RenderWindow":
+                    if (uint.TryParse(values[0], out uint value1) && uint.TryParse(values[0], out uint value2))
+                    {
+                        GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)?
+                            .SetValue(this, new RenderWindow(new VideoMode(value1, value2), values[2]));
+                    }
+                    else
+                        configBroken = true;
+                    break;
+
+                default:
+                    configBroken = true;
+                    break;
+            }
+        }
+
+        reader.Close();
     }
 }

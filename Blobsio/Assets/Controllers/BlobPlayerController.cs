@@ -18,6 +18,7 @@ public class BlobPlayerController : BlobController
     {
         Input.MovementInput += Move;
         Input.Create(ThrowFood, Keyboard.Key.F);
+        Input.Create(DivideBlob, Keyboard.Key.Space);
         //Input.FoodThrowInput += ThrowFood;
 
         controlledBlob = b;
@@ -38,5 +39,10 @@ public class BlobPlayerController : BlobController
     private void ThrowFood()
     {
         controlledBlob.ThrowFood(moveDirection);
+    }
+
+    private void DivideBlob()
+    {
+
     }
 }

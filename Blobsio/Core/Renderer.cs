@@ -21,6 +21,8 @@ public class Renderer
     public void Start(RenderWindow window)
     {
         this.window = window;
+        windowX = window.Size.X; 
+        windowY = window.Size.Y;
 
         window.Closed += new EventHandler(OnClose);
         window.Resized += new EventHandler<SizeEventArgs>(OnResize);

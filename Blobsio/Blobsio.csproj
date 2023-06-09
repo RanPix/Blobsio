@@ -8,6 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Recources\Configs\config.cfg" />
+    <None Remove="Recources\defaultConfig.cfg" />
+    <None Remove="Recources\Fonts\arial.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Recources\Configs\config.cfg" />
+    <EmbeddedResource Include="Recources\Configs\defaultConfig.cfg" />
+    <EmbeddedResource Include="Recources\Fonts\arial.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SFML.Net" Version="2.5.0" />
   </ItemGroup>
 

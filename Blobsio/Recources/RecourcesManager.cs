@@ -1,26 +1,25 @@
-﻿using Blobsio.Core;
+﻿using SFML.Graphics;
+using System.Reflection;
+using System.Reflection.PortableExecutable;
 
 namespace Blobsio.Recources;
 
 public static class RecourcesManager
 {
-    public static string GetFont(string name)
+    private static Assembly assembly = Assembly.GetExecutingAssembly();
+
+    public static Font GetFont(string name)
     {
-        string path = "";
-
-        try
+        using (Stream stream = assembly.GetManifestResourceStream("Blobsio.Recources.Fonts" + name))
         {
-#if DEBUG
-            path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\Recources\Fonts\" + name;
-#else
-            path = Directory.GetCurrentDirectory() + @"\Recources\Fonts\" + name;
-#endif
+            return new Font(stream);
         }
-        catch
-        {
-            ErrorHandler.Error(new Exception("The path or the name of the font is incorrect."));
-        }
-
-        return path;
     }
+
+
+    public static Stream GetDefaultConfig(string name)
+        => assembly.GetManifestResourceStream("Blobsio.Recources.Configs.defaultConfig.cfg");
+
+    public static Stream GetConfig(string name)
+        => assembly.GetManifestResourceStream($"Blobsio.Recources.Configs.{name}.cfg");
 }

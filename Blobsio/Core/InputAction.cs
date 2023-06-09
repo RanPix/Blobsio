@@ -15,10 +15,10 @@ public struct InputAction
 
     public void Update()
     {
-        if (action == null)
-            return;
 
         if (Keyboard.IsKeyPressed(bind))
-            action.Invoke();
+        {
+            action?.Invoke();
+        }
     }
 }
