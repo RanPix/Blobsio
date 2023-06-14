@@ -2,6 +2,7 @@ using Blobsio.Core;
 using SFML.System;
 using SFML.Graphics;
 using Blobsio.Assets.Controllers;
+using Blobsio.Recources;
 
 namespace Blobsio.Assets;
 
@@ -12,6 +13,14 @@ public class Blob : Entity
 
     public int size = 20;
     public float speed = 700;
+
+    private Vector2i animationRowsAndColumns = new Vector2i(2, 2);
+    private Vector2i animationFrameSize = new Vector2i(16, 16);
+    private float frameTime = 0.1f;
+    private float frameTimer;
+    private int frameCount = 4;
+    private int currentFrame = 1;
+    
 
     public Blob (BlobController controller, View camera = null)
     {
@@ -27,6 +36,7 @@ public class Blob : Entity
         tag = Tag.Blob;
 
         CircleShape shape = new CircleShape(size, 30);
+        shape.Texture = RecourcesManager.GetAnimationTexture("blob");
         graphic = shape;
 
         collider = size * 0.8f;
@@ -38,6 +48,8 @@ public class Blob : Entity
 
     public override void Update()
     {
+        UpdateAnimation();
+
         if (controller != null)
             controller.Update();
     }
@@ -126,4 +138,22 @@ public class Blob : Entity
 
     public Drawable Draw()
         => (Drawable)graphic;
+
+
+
+
+    private void UpdateAnimation()
+    {
+        frameTimer += Time.deltaTime;
+        if (frameTimer < frameTime)
+            return;
+        frameTimer = 0;
+
+        CircleShape currentGraphic = (CircleShape)graphic;
+        currentGraphic.TextureRect = new IntRect(new Vector2i((animationFrameSize.X * currentFrame) - animationFrameSize.X, 0), animationFrameSize);
+
+        currentFrame++;
+        if (currentFrame > frameCount)
+            currentFrame = 1;
+    }
 }

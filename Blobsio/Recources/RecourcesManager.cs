@@ -22,4 +22,17 @@ public static class RecourcesManager
 
     public static Stream GetConfig(string name)
         => assembly.GetManifestResourceStream($"Blobsio.Recources.Configs.{name}.cfg");
+
+
+    public static Texture GetAnimationTexture(string name)
+    {
+        Texture t;
+
+        using (Stream stream = assembly.GetManifestResourceStream($"Blobsio.Recources.Animations.{name}.png"))
+        {
+            t = new Texture(stream);
+        }
+
+        return t;
+    }
 }
