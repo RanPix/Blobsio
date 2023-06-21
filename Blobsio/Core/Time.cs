@@ -4,7 +4,7 @@ namespace Blobsio.Core;
 
 public static class Time
 {
-    public static float deltaTime;
+    public static float deltaTime { get; private set; }
     private static Stopwatch timer = new Stopwatch();
 
     public static void Start()
