@@ -6,22 +6,7 @@ static class Program
 {
     private static List<Entity> entities = new List<Entity>()
     {
-        new GameStartupSpawner(),
-
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
-        new Spike(),
+        new Entity(new List<Component> { new GameStartupSpawner() }),
     };
 
     static void Main()

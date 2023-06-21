@@ -3,7 +3,7 @@ using Blobsio.Core;
 
 namespace Blobsio.Assets;
 
-public class GameStartupSpawner : Entity
+public class GameStartupSpawner : Component
 {
     private int pointsAmount = 1000;
     private int playersAmount = 10;
@@ -13,23 +13,23 @@ public class GameStartupSpawner : Entity
     {
         base.Start();
 
-        world.Instantiate(new Blob(new BlobPlayerController()));
+        Instantiate(new Entity(new List<Component>() { new Blob(), new BlobPlayerController() }));
 
         for (int i = 0; i < playersAmount; i++)
         {
-            world.Instantiate(new Blob(new BlobAiController()));
+            Instantiate(new Entity(new List<Component>() { new Blob(), new BlobAiController() }));
         }
 
         for (int i = 0; i < spikesAmount; i++)
         {
-            world.Instantiate(new Spike());
+            Instantiate(new Entity(new List<Component>() { new Spike() }));
         }
 
         for (int i = 0; i < pointsAmount; i++)
         {
-            world.Instantiate(new Food(1, true));
+            Instantiate(new Entity(new List<Component>() { new Food() }));
         }
 
-        world.Destroy(this);
+        Destroy(entity);
     }
 }

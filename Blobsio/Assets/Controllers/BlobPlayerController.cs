@@ -4,24 +4,19 @@ using SFML.System;
 
 namespace Blobsio.Assets.Controllers;
 
-public class BlobPlayerController : BlobController
+public class BlobPlayerController : Component
 {
     private Blob controlledBlob;
-    Vector2f moveDirection;
+    private Vector2f moveDirection;
 
-    public override void Update()
-    {
-
-    }
-
-    public override void SetBlob(Blob b)
+    public override void Start()
     {
         Input.MovementInput += Move;
         Input.Create(ThrowFood, Keyboard.Key.F);
         Input.Create(DivideBlob, Keyboard.Key.Space);
         //Input.FoodThrowInput += ThrowFood;
 
-        controlledBlob = b;
+        controlledBlob = GetComponent<Blob>();
     }
 
     private void Move(Vector2f input)
@@ -32,8 +27,8 @@ public class BlobPlayerController : BlobController
 
         velocity = controlledBlob.ConstrainToBounds(velocity);
 
-        controlledBlob.position += velocity;
-        Renderer.mainCamera.Center = controlledBlob.position;
+        entity.position += velocity;
+        Renderer.mainCamera.Center = entity.position;
     }
 
     private void ThrowFood()

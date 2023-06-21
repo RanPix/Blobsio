@@ -1,7 +1,9 @@
 ﻿global using Time = Blobsio.Core.Time;
 using Blobsio.Recources;
 using SFML.Graphics;
+using SFML.System;
 using SFML.Window;
+using System.Numerics;
 using System.Reflection;
 
 namespace Blobsio.Core;
@@ -39,6 +41,7 @@ public class Game
             input.Update();
             Start();
             Update();
+            LateUpdate();
             Destroy();
 
             renderer.Render(entities.ToArray());
@@ -59,8 +62,29 @@ public class Game
         newEntities.Clear();
     }
 
+    private void Update()
+    {
+        for (int i = 0; i < entities.Count; i++)
+        {
+            entities[i].Update();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        for (int i = 0; i < entities.Count; i++)
+        {
+            entities[i].LateUpdate();
+        }
+    }
+
     private void Destroy()
     {
+        for (int i = 0; i < entities.Count; i++)
+        {
+            entities[i].Destroy();
+        }
+
         if (pendingEntitiesToDestroy.Count == 0)
             return;
         
@@ -72,14 +96,6 @@ public class Game
         pendingEntitiesToDestroy.Clear();
     }
 
-    private void Update()
-    {
-        for (int i = 0; i < entities.Count; i++)
-        {
-            entities[i].Update();
-        }
-    }
-
     private void InitializeEntities()
     {
         for (int i = 0; i < entities.Count; i++)
@@ -89,10 +105,10 @@ public class Game
         }
     }
 
-    public Entity FindEntitiyByTag(Tag tag)
+    public Entity FindEntitiyByTag(string tag)
         => entities.Find(x => x.tag == tag);
 
-    public Entity[] FindEntitiesByTag(Tag tag)
+    public Entity[] FindEntitiesByTag(string tag)
         => entities.FindAll(x => x.tag == tag).ToArray();
 
     public Entity Instantiate(Entity e)
@@ -100,6 +116,16 @@ public class Game
         newEntities.Add(e);
 
         e.OnInstantiate(this);
+
+        return e;
+    }
+
+    public Entity Instantiate(Entity e, Vector2f position)
+    {
+        newEntities.Add(e);
+
+        e.OnInstantiate(this);
+        e.position = position;
 
         return e;
     }
@@ -123,9 +149,7 @@ public class Game
     {
         StreamReader reader = new StreamReader(RecourcesManager.GetConfig("config"));
 
-        bool configBroken = false; // я хотів зробити завантаження дефолтного конфігу якщо той зламаний але не допер як то зробити
-
-        while (!reader.EndOfStream && !configBroken)
+        while (!reader.EndOfStream)
         {
             string[] input = reader.ReadLine().Split(':');
 
@@ -138,12 +162,12 @@ public class Game
             if (values.Length < 0)
                 continue;
 
-            FieldInfo type = GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo field = GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance);
 
-            if (type == null)
+            if (field == null)
                 continue;
 
-            switch (type.FieldType.Name.ToString())
+            switch (field.FieldType.Name)
             {
                 case "Int32": // ЧОГО МЕНІ ПРОСТО НЕ ДАДУТЬ НОРМАЛЬНИЙ ТИП А НЕ ЯКЕСЬ ЛАЙНО
                     if (int.TryParse(input[1], out int value))
@@ -151,8 +175,6 @@ public class Game
                         GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)?
                             .SetValue(this, value);
                     }
-                    else
-                        configBroken = true;
                     break;
 
                 case "RenderWindow":
@@ -161,12 +183,6 @@ public class Game
                         GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)?
                             .SetValue(this, new RenderWindow(new VideoMode(value1, value2), values[2]));
                     }
-                    else
-                        configBroken = true;
-                    break;
-
-                default:
-                    configBroken = true;
                     break;
             }
         }

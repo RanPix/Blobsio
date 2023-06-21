@@ -1,7 +1,6 @@
 using SFML.System;
 using SFML.Window;
 using Blobsio.Core.Extentions;
-using System.Runtime.CompilerServices;
 
 namespace Blobsio.Core;
 
@@ -9,7 +8,7 @@ public class Input
 {
     private Window window;
 
-    private static List<InputAction> Inputs = new List<InputAction>();
+    private static List<InputKey> Inputs = new List<InputKey>();
 
     public void Start(Window window)
     {
@@ -29,9 +28,11 @@ public class Input
         //GetFoodThrowInput();
     }
 
-    public static void Create(Action input, Keyboard.Key bind)
+    public static InputKey Create(Action input, Keyboard.Key bind)
     {
-        Inputs.Add(new InputAction(input, bind));
+        InputKey inputKey = new InputKey(bind);
+        Inputs.Add(inputKey);
+        return inputKey;
     }
 
     public static void Remove(Keyboard.Key bind)
@@ -42,8 +43,6 @@ public class Input
                 Inputs.RemoveAt(i);
         }
     }
-
-    #region MovementInput
 
     public static Action<Vector2f> MovementInput;
 
@@ -83,31 +82,4 @@ public class Input
 
     private Vector2f GetMouseMovementInput() // не зважайте
         => ((Vector2f)(Mouse.GetPosition(window) - (Vector2i)window.Size / 2)).Normalize();
-
-    #endregion
-
-    #region FoodThrowInput
-
-    public static Action FoodThrowInput;
-
-    private void GetFoodThrowInput()
-    {
-        if (FoodThrowInput == null)
-            return;
-
-        bool input = false;
-
-        input = GetKeyboardFoodThrow();
-
-        if (input)
-        {
-            FoodThrowInput.Invoke();
-            return;
-        }
-    }
-
-    private bool GetKeyboardFoodThrow()
-        => Keyboard.IsKeyPressed(Keyboard.Key.F);
-
-    #endregion
 }
