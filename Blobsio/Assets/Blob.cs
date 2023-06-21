@@ -25,7 +25,7 @@ public class Blob : Component
 
 
         CircleShape shape = new CircleShape(size, 200);
-        shape.OutlineThickness = 0.2f;
+        shape.OutlineThickness = 1f;
         entity.graphic = shape;
         entity.collider = size * 0.8f;
         entity.position = entity.position;
@@ -119,6 +119,9 @@ public class Blob : Component
     {
         size = 100;
         AddSize(0);
+
+        int animIndex = Rand.rand.Next(animations.Length);
+        GetComponent<Animation>().Setup(RecourcesManager.GetAnimationTexture(animations[animIndex].name), animations[animIndex].size, animations[animIndex].frameTime, animations[animIndex].framesCount);
 
         entity.position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
     }
