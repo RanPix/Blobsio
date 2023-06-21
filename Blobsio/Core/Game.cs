@@ -3,7 +3,6 @@ using Blobsio.Recources;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-using System.Numerics;
 using System.Reflection;
 
 namespace Blobsio.Core;

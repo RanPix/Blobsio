@@ -45,7 +45,11 @@ public class Entity
         for (int i = 0; i < components.Count; i++)
         {
             components[i].OnInstantiate(this);
-            components[i].Start();
+        }
+
+        for (int i = 0; i < components.Count; i++)
+        {
+            components[i].Start();  
         }
     }
 
@@ -136,7 +140,7 @@ public class Entity
     {
         T component = Activator.CreateInstance<T>();
 
-        //component.OnInstantiate(this);
+        component.OnInstantiate(this);
         newComponents.Add(component);
         return component;
     }

@@ -2,6 +2,7 @@
 using SFML.System;
 using SFML.Graphics;
 using System.Drawing;
+using Blobsio.Recources;
 
 namespace Blobsio.Assets;
 
@@ -17,15 +18,18 @@ public class Food : Component
     {
         base.Start();
 
+        entity.tag = "Food";
+
         entity.graphic = new CircleShape(size + 5, 10);
         entity.graphic.Origin = new Vector2f(size + 5, size + 5);
+
+        Animation anim = AddComponent<Animation>();
+        anim.Setup(RecourcesManager.GetAnimationTexture("point"), new Vector2i(8, 8), 0.4f, 2);
 
         entity.collider = size + 5;
         entity.processCollision = false;
 
         speed *= size * 0.2f;
-
-        entity.tag = "Food";
 
         if (canRespawn)
             entity.position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));

@@ -13,11 +13,11 @@ public class GameStartupSpawner : Component
     {
         base.Start();
 
-        Instantiate(new Entity(new List<Component>() { new Blob(), new BlobPlayerController() }));
+        Instantiate(new Entity(new List<Component>() { new Blob(), new BlobPlayerController(), new Animation() }));
 
         for (int i = 0; i < playersAmount; i++)
         {
-            Instantiate(new Entity(new List<Component>() { new Blob(), new BlobAiController() }));
+            Instantiate(new Entity(new List<Component>() { new Blob(), new BlobAiController(), new Animation() }));
         }
 
         for (int i = 0; i < spikesAmount; i++)

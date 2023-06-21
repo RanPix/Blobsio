@@ -1,4 +1,5 @@
 ﻿using Blobsio.Core;
+using Blobsio.Recources;
 using SFML.Graphics;
 using SFML.System;
 
@@ -16,7 +17,7 @@ public class Spike : Component
         entity.processCollision = false;
 
         CircleShape shape = new CircleShape(radius, 30);
-        shape.FillColor = new Color(100, 100, 100);
+        //shape.FillColor = new Color(100, 100, 100);
 
         entity.graphic = shape;
         entity.collider = radius;
@@ -24,6 +25,10 @@ public class Spike : Component
 
         entity.collider = radius;
         entity.position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+
+
+        Animation anim = AddComponent<Animation>();
+        anim.Setup(RecourcesManager.GetAnimationTexture("spike"), new Vector2i(16, 16), 0.2f, 2);
     }
 
     public void Respawn()

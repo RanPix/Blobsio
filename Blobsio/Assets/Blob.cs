@@ -12,11 +12,8 @@ public class Blob : Component
     public int size = 20;
     public float speed = 700;
 
-    private Vector2i animationFrameSize = new Vector2i(16, 16);
-    private float frameTime = 0.1f;
-    private float frameTimer;
-    private int frameCount = 4;
-    private int currentFrame = 1;
+    public (string name, Vector2i size, float frameTime, int framesCount)[] animations = 
+        { ("blob", new Vector2i(16, 16), 0.1f, 4), ("rain", new Vector2i(16, 16), 0.07f, 4), ("glavie", new Vector2i(16, 16), 0.1f, 8) };
 
     public override void Start()
     {
@@ -26,20 +23,18 @@ public class Blob : Component
 
         entity.tag = "Blob";
 
-        CircleShape shape = new CircleShape(size, 30);
-        shape.Texture = RecourcesManager.GetAnimationTexture("blob");
-        entity.graphic = shape;
 
+        CircleShape shape = new CircleShape(size, 200);
+        shape.OutlineThickness = 0.2f;
+        entity.graphic = shape;
         entity.collider = size * 0.8f;
         entity.position = entity.position;
         entity.graphic.Origin = new Vector2f(size, size);
 
-        Respawn();
-    }
+        int animIndex = Rand.rand.Next(animations.Length);
+        GetComponent<Animation>().Setup(RecourcesManager.GetAnimationTexture(animations[animIndex].name), animations[animIndex].size, animations[animIndex].frameTime, animations[animIndex].framesCount);
 
-    public override void Update()
-    {
-        UpdateAnimation();
+        Respawn();
     }
 
     public override void OnCollision(Entity collision)
@@ -126,26 +121,5 @@ public class Blob : Component
         AddSize(0);
 
         entity.position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
-    }
-
-    public Drawable Draw()
-        => (Drawable)entity.graphic;
-
-
-
-
-    private void UpdateAnimation()
-    {
-        frameTimer += Time.deltaTime;
-        if (frameTimer < frameTime)
-            return;
-        frameTimer = 0;
-
-        CircleShape currentGraphic = (CircleShape)entity.graphic;
-        currentGraphic.TextureRect = new IntRect(new Vector2i((animationFrameSize.X * currentFrame) - animationFrameSize.X, 0), animationFrameSize);
-
-        currentFrame++;
-        if (currentFrame > frameCount)
-            currentFrame = 1;
     }
 }
