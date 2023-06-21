@@ -4,11 +4,11 @@ using SFML.System;
 
 namespace Blobsio.Assets.Controllers;
 
-public class BlobAiController : BlobController
+public class BlobAiController : Component
 {
     private Blob blob;
 
-    private float directionChangeTime = 2f; // це для примітивного ші
+    private float directionChangeTime = 2f;
     private float directionChangeTimer = 2f;
 
     private Vector2f input;
@@ -20,9 +20,9 @@ public class BlobAiController : BlobController
         MoveAI();
     }
 
-    public override void SetBlob(Blob b)
+    public override void Start()
     {
-        blob = b;
+        blob = GetComponent<Blob>();
     }
 
     private void MoveAI()
@@ -37,6 +37,6 @@ public class BlobAiController : BlobController
 
         velocity = blob.ConstrainToBounds(velocity);
 
-        blob.position += velocity;
+        entity.position += velocity;
     }
 }

@@ -1,66 +1,49 @@
 using Blobsio.Core;
 using SFML.System;
 using SFML.Graphics;
-using Blobsio.Assets.Controllers;
 using Blobsio.Recources;
 
 namespace Blobsio.Assets;
 
-public class Blob : Entity
+public class Blob : Component
 {
-    public BlobController controller;
     public View camera;
 
     public int size = 20;
     public float speed = 700;
 
-    private Vector2i animationRowsAndColumns = new Vector2i(2, 2);
-    private Vector2i animationFrameSize = new Vector2i(16, 16);
-    private float frameTime = 0.1f;
-    private float frameTimer;
-    private int frameCount = 4;
-    private int currentFrame = 1;
-    
-
-    public Blob (BlobController controller, View camera = null)
-    {
-        this.controller = controller;
-        this.controller.SetBlob(this);
-        this.camera = camera;
-    }
+    public (string name, Vector2i size, float frameTime, int framesCount)[] animations = 
+        { ("blob", new Vector2i(16, 16), 0.1f, 4), ("rain", new Vector2i(16, 16), 0.07f, 4), ("glavie", new Vector2i(16, 16), 0.1f, 8) };
 
     public override void Start()
     {
         base.Start();
 
-        tag = Tag.Blob;
+        camera = Renderer.mainCamera;
 
-        CircleShape shape = new CircleShape(size, 30);
-        shape.Texture = RecourcesManager.GetAnimationTexture("blob");
-        graphic = shape;
+        entity.tag = "Blob";
 
-        collider = size * 0.8f;
-        position = position;
-        graphic.Origin = new Vector2f(size, size);
+
+        CircleShape shape = new CircleShape(size, 200);
+        shape.OutlineThickness = 0.2f;
+        entity.graphic = shape;
+        entity.collider = size * 0.8f;
+        entity.position = entity.position;
+        entity.graphic.Origin = new Vector2f(size, size);
+
+        int animIndex = Rand.rand.Next(animations.Length);
+        GetComponent<Animation>().Setup(RecourcesManager.GetAnimationTexture(animations[animIndex].name), animations[animIndex].size, animations[animIndex].frameTime, animations[animIndex].framesCount);
 
         Respawn();
-    }
-
-    public override void Update()
-    {
-        UpdateAnimation();
-
-        if (controller != null)
-            controller.Update();
     }
 
     public override void OnCollision(Entity collision)
     {
         base.OnCollision(collision);
 
-        if (collision.tag == Tag.Blob)
+        if (collision.tag == "Blob")
         {
-            Blob enemy = (Blob)collision;
+            Blob enemy = collision.GetComponent<Blob>();
 
             if (enemy.size > size)
                 Respawn();
@@ -69,17 +52,17 @@ public class Blob : Entity
                 AddSize(enemy.size);
         }
 
-        if (collision.tag == Tag.Point)
+        if (collision.tag == "Food")
         {
-            Food point = (Food)collision;
+            Food point = collision.GetComponent<Food>();
             point.Respawn();
 
             AddSize(point.size);
         }
 
-        if (collision.tag == Tag.Spike && size > 200)
+        if (collision.tag == "Spike" && size > 200)
         {
-            Spike spike = (Spike)collision;
+            Spike spike = collision.GetComponent<Spike>();
 
             spike.Respawn();
             AddSize(-size / 2);
@@ -90,14 +73,14 @@ public class Blob : Entity
     {
         Vector2f newVelocity = new Vector2f();
 
-        if (position.X - size > 0f && velocity.X < 0f)
+        if (entity.position.X - size > 0f && velocity.X < 0f)
             newVelocity.X += velocity.X;
-        if (position.X + size < Game.MAP_SIZE && velocity.X > 0f)
+        if (entity.position.X + size < Game.MAP_SIZE && velocity.X > 0f)
             newVelocity.X += velocity.X;
 
-        if (position.Y - size > 0f && velocity.Y < 0f)
+        if (entity.position.Y - size > 0f && velocity.Y < 0f)
             newVelocity.Y += velocity.Y;
-        if (position.Y + size < Game.MAP_SIZE && velocity.Y > 0f)
+        if (entity.position.Y + size < Game.MAP_SIZE && velocity.Y > 0f)
             newVelocity.Y += velocity.Y;
 
         return newVelocity;
@@ -108,7 +91,11 @@ public class Blob : Entity
         if (size < 100)
             return;
 
-        world.Instantiate(new Food((int)(size * 0.05f), false, direction, position + direction * size));
+        Food food = Instantiate(new Entity(new List<Component>() { new Food() })).GetComponent<Food>();
+        food.size = (int)(size * 0.05f);
+        food.direction = direction;
+        food.entity.position = entity.position + direction * size;
+
         size = (int)(size * 0.95f);
     }
 
@@ -116,12 +103,12 @@ public class Blob : Entity
     {
         size = Math.Clamp(size + amount, 20, 10000000);
 
-        CircleShape currentGraphic = (CircleShape)graphic;
+        CircleShape currentGraphic = (CircleShape)entity.graphic;
         currentGraphic.Radius = size;
-        graphic = currentGraphic;
-        graphic.Origin = new Vector2f(size, size);
+        entity.graphic = currentGraphic;
+        entity.graphic.Origin = new Vector2f(size, size);
 
-        collider = size * 0.8f;
+        entity.collider = size * 0.8f;
 
         //cameraFOV = 1 + size / 1000 * 0.2f;
         //Console.WriteLine(cameraFOV);
@@ -133,27 +120,6 @@ public class Blob : Entity
         size = 100;
         AddSize(0);
 
-        position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
-    }
-
-    public Drawable Draw()
-        => (Drawable)graphic;
-
-
-
-
-    private void UpdateAnimation()
-    {
-        frameTimer += Time.deltaTime;
-        if (frameTimer < frameTime)
-            return;
-        frameTimer = 0;
-
-        CircleShape currentGraphic = (CircleShape)graphic;
-        currentGraphic.TextureRect = new IntRect(new Vector2i((animationFrameSize.X * currentFrame) - animationFrameSize.X, 0), animationFrameSize);
-
-        currentFrame++;
-        if (currentFrame > frameCount)
-            currentFrame = 1;
+        entity.position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
     }
 }

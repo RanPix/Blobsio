@@ -9,6 +9,10 @@
 
   <ItemGroup>
     <None Remove="Recources\Animations\blob.png" />
+    <None Remove="Recources\Animations\glavie.png" />
+    <None Remove="Recources\Animations\point.png" />
+    <None Remove="Recources\Animations\rain.png" />
+    <None Remove="Recources\Animations\spike.png" />
     <None Remove="Recources\Configs\config.cfg" />
     <None Remove="Recources\defaultConfig.cfg" />
     <None Remove="Recources\Fonts\arial.ttf" />
@@ -16,6 +20,10 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Recources\Animations\blob.png" />
+    <EmbeddedResource Include="Recources\Animations\glavie.png" />
+    <EmbeddedResource Include="Recources\Animations\point.png" />
+    <EmbeddedResource Include="Recources\Animations\rain.png" />
+    <EmbeddedResource Include="Recources\Animations\spike.png" />
     <EmbeddedResource Include="Recources\Configs\config.cfg" />
     <EmbeddedResource Include="Recources\Configs\defaultConfig.cfg" />
     <EmbeddedResource Include="Recources\Fonts\arial.ttf" />

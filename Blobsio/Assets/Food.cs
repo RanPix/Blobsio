@@ -2,41 +2,37 @@
 using SFML.System;
 using SFML.Graphics;
 using System.Drawing;
+using Blobsio.Recources;
 
 namespace Blobsio.Assets;
 
-public class Food : Entity
+public class Food : Component
 {
     public int size = 1;
-    private bool canRespawn = true;
+    public bool canRespawn = true;
 
-    private Vector2f direction;
-    private float speed = 1000;
-
-    public Food(int size, bool canRespawn, Vector2f direction = new Vector2f(), Vector2f position = new Vector2f())
-    {
-        this.size = size;
-        this.canRespawn = canRespawn;
-        this.direction = direction;
-        this.position = position;
-    }
+    public Vector2f direction;
+    public float speed = 1000;
 
     public override void Start()
     {
         base.Start();
 
-        graphic = new CircleShape(size + 5, 10);
-        graphic.Origin = new Vector2f(size + 5, size + 5);
+        entity.tag = "Food";
 
-        collider = size + 5;
-        processCollision = false;
+        entity.graphic = new CircleShape(size + 5, 10);
+        entity.graphic.Origin = new Vector2f(size + 5, size + 5);
+
+        Animation anim = AddComponent<Animation>();
+        anim.Setup(RecourcesManager.GetAnimationTexture("point"), new Vector2i(8, 8), 0.4f, 2);
+
+        entity.collider = size + 5;
+        entity.processCollision = false;
 
         speed *= size * 0.2f;
 
-        tag = Tag.Point;
-
         if (canRespawn)
-            position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+            entity.position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
     }
 
     public override void Update()
@@ -44,7 +40,7 @@ public class Food : Entity
         if (canRespawn || speed < 0)
             return;
 
-        position += direction * speed * Time.deltaTime;
+        entity.position += direction * speed * Time.deltaTime;
 
         speed -= Time.deltaTime * 2000;
     }
@@ -52,9 +48,9 @@ public class Food : Entity
     public void Respawn()
     {
         if (canRespawn)
-            position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+            entity.position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
 
         else // мені було ліньки думати
-            world.Destroy(this);
+            Destroy(entity);
     }
 }
