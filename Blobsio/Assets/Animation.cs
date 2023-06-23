@@ -1,4 +1,4 @@
-﻿using Blobsio.Core;
+﻿using Blobsio.Core.Entities;
 using SFML.Graphics;
 using SFML.System;
 
@@ -8,7 +8,7 @@ public class Animation : Component
 {
     private Texture texture;
 
-    private Vector2i animationFrameSize = new Vector2i(16, 16);
+    private int frameSize = 16;
     private float frameTime = 0.1f;
     private float frameTimer;
     private int frameCount = 4;
@@ -21,11 +21,12 @@ public class Animation : Component
         UpdateAnimation();
     }
 
-    public void Setup(Texture texture, Vector2i animationFrameSize, float frameTime, int frameCount)
+    public void Setup(Texture texture, int frameSize, float frameTime, int frameCount)
     {
+        this.texture = texture;
         CircleShape shape = (CircleShape)entity.graphic;
         shape.Texture = texture;
-        this.animationFrameSize = animationFrameSize;
+        this.frameSize = frameSize;
         this.frameTime = frameTime;
         this.frameCount = frameCount;
     }
@@ -38,7 +39,7 @@ public class Animation : Component
         frameTimer = 0;
 
         CircleShape currentGraphic = (CircleShape)entity.graphic;
-        currentGraphic.TextureRect = new IntRect(new Vector2i((animationFrameSize.X * currentFrame) - animationFrameSize.X, 0), animationFrameSize);
+        currentGraphic.TextureRect = new IntRect(new Vector2i((frameSize * currentFrame) - frameSize, 0), new Vector2i(frameSize, frameSize));
 
         currentFrame++;
         if (currentFrame > frameCount)

@@ -1,4 +1,4 @@
-﻿namespace Blobsio.Core;
+﻿namespace Blobsio.Core.Entities;
 
 public abstract class Component
 {
@@ -8,7 +8,7 @@ public abstract class Component
     {
         this.entity = entity;
     }
-    
+
     public virtual void Start() { }
 
     public virtual void Update() { }
@@ -34,7 +34,7 @@ public abstract class Component
     protected T GetComponent<T>() where T : Component
         => entity.GetComponent<T>();
 
-    protected List<T> GetComponents<T>() where T : Component
+    protected T[] GetComponents<T>() where T : Component
         => entity.GetComponents<T>();
 
     protected T AddComponent<T>() where T : Component

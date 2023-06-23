@@ -1,8 +1,10 @@
-﻿global using Time = Blobsio.Core.Time;
+global using Time = Blobsio.Core.Time;
+using Blobsio.Core.Entities;
 using Blobsio.Recources;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using Blobsio.Core.Inputs;
 using System.Reflection;
 
 namespace Blobsio.Core;

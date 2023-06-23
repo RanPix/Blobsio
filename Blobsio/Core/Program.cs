@@ -1,4 +1,5 @@
 ﻿using Blobsio.Assets;
+using Blobsio.Core.Entities;
 
 namespace Blobsio.Core;
 
@@ -6,7 +7,7 @@ static class Program
 {
     private static List<Entity> entities = new List<Entity>()
     {
-        new Entity(new List<Component> { new GameStartupSpawner() }),
+        new GameStartupSpawner(),
     };
 
     static void Main()

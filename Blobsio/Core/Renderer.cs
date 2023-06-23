@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using Blobsio.Core.Entities;
+using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 

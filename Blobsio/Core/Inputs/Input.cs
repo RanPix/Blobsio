@@ -2,7 +2,7 @@ using SFML.System;
 using SFML.Window;
 using Blobsio.Core.Extentions;
 
-namespace Blobsio.Core;
+namespace Blobsio.Core.Inputs;
 
 public class Input
 {

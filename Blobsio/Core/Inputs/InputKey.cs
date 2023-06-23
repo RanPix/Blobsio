@@ -1,6 +1,6 @@
 ﻿using SFML.Window;
 
-namespace Blobsio.Core;
+namespace Blobsio.Core.Inputs;
 
 public class InputKey
 {

@@ -1,12 +1,13 @@
 ﻿using Blobsio.Core;
 using SFML.System;
 using SFML.Graphics;
-using System.Drawing;
 using Blobsio.Recources;
+using SFML.Audio;
+using Blobsio.Core.Entities;
 
 namespace Blobsio.Assets;
 
-public class Food : Component
+public class Food : Entity
 {
     public int size = 1;
     public bool canRespawn = true;
@@ -14,43 +15,49 @@ public class Food : Component
     public Vector2f direction;
     public float speed = 1000;
 
+    public Food() { }
+    public Food(List<Component> components) : base(components) { }
+
     public override void Start()
     {
         base.Start();
 
-        entity.tag = "Food";
+        tag += "Food";
 
-        entity.graphic = new CircleShape(size + 5, 10);
-        entity.graphic.Origin = new Vector2f(size + 5, size + 5);
+        graphic = new CircleShape(size + 5, 10);
+        graphic.Origin = new Vector2f(size + 5, size + 5);
 
         Animation anim = AddComponent<Animation>();
-        anim.Setup(RecourcesManager.GetAnimationTexture("point"), new Vector2i(8, 8), 0.4f, 2);
+        anim.Setup(RecourcesManager.GetAnimationTexture("point"), 8, 0.4f, 2);
 
-        entity.collider = size + 5;
-        entity.processCollision = false;
+        collider = size + 5;
+        //processCollision = false;
 
         speed *= size * 0.2f;
 
         if (canRespawn)
-            entity.position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+            position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
     }
 
     public override void Update()
     {
+        base.Update();
+
         if (canRespawn || speed < 0)
             return;
 
-        entity.position += direction * speed * Time.deltaTime;
+        position += direction * speed * Time.deltaTime;
 
         speed -= Time.deltaTime * 2000;
     }
 
     public void Respawn()
     {
+
         if (canRespawn)
-            entity.position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+            position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
 
         else // мені було ліньки думати
-            Destroy(entity);
+            Destroy(this);
     }
 }

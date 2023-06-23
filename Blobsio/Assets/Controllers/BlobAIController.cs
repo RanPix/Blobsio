@@ -1,4 +1,5 @@
 ﻿using Blobsio.Core;
+using Blobsio.Core.Entities;
 using Blobsio.Core.Extentions;
 using SFML.System;
 
@@ -6,7 +7,7 @@ namespace Blobsio.Assets.Controllers;
 
 public class BlobAiController : Component
 {
-    private Blob blob;
+    private Blob controlledBlob;
 
     private float directionChangeTime = 2f;
     private float directionChangeTimer = 2f;
@@ -22,7 +23,7 @@ public class BlobAiController : Component
 
     public override void Start()
     {
-        blob = GetComponent<Blob>();
+        controlledBlob = (Blob)entity;
     }
 
     private void MoveAI()
@@ -33,9 +34,9 @@ public class BlobAiController : Component
             directionChangeTimer = 0;
         }
 
-        Vector2f velocity = input * blob.speed * Time.deltaTime;
+        Vector2f velocity = input * controlledBlob.speed * Time.deltaTime;
 
-        velocity = blob.ConstrainToBounds(velocity);
+        velocity = controlledBlob.ConstrainToBounds(velocity);
 
         entity.position += velocity;
     }
