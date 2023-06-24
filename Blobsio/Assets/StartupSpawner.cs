@@ -3,7 +3,7 @@ using Blobsio.Core.Entities;
 
 namespace Blobsio.Assets;
 
-public class GameStartupSpawner : Entity
+public class StartupSpawner : Entity
 {
     private int pointsAmount = 1000;
     private int playersAmount = 10;
@@ -13,7 +13,9 @@ public class GameStartupSpawner : Entity
     {
         base.Start();
 
-        Instantiate(new Blob(new List<Component>() { new BlobPlayerController(), new Animation() }));
+        Instantiate(new AudioSystem(new List<AudioClipID>() { new AudioClipID(new AudioClip("pop2"), "pop") }));
+
+        Instantiate(new Blob(new List<Component>() { new BlobPlayerController(), new Animation(), new AudioSource("pop2"), new AudioSourceID("pop") }));
 
         for (int i = 0; i < playersAmount; i++)
         {

@@ -34,12 +34,12 @@ public class Entity
 
     public Entity(List<Component> components)
     {
-        this.components = components;
+        newComponents = components;
     }
 
     public Entity(List<Component> components, Transformable graphic)
     {
-        this.components = components;
+        newComponents = components;
         this.graphic = graphic;
     }
 
@@ -52,7 +52,7 @@ public class Entity
     }
     public Entity(List<Component> components, string tag = "", float collider = 0f, bool processCollision = true, Vector2f position = new Vector2f())
     {
-        this.components = components;
+        newComponents = components;
         this.tag += tag;
         this.collider = collider;
         this.processCollision = processCollision;
@@ -61,7 +61,7 @@ public class Entity
 
     public Entity(List<Component> components, Transformable graphic, string tag = "", float collider = 0f, bool processCollision = true, Vector2f position = new Vector2f())
     {
-        this.components = components;
+        newComponents = components;
         this.graphic = graphic;
         this.tag += tag;
         this.collider = collider;
@@ -80,14 +80,9 @@ public class Entity
 
     private void InitializeComponents()
     {
-        for (int i = 0; i < components.Count; i++)
+        for (int i = 0; i < newComponents.Count; i++)
         {
-            components[i].OnInstantiate(this);
-        }
-
-        for (int i = 0; i < components.Count; i++)
-        {
-            components[i].Start();
+            newComponents[i].OnInstantiate(this);
         }
     }
 
@@ -119,12 +114,13 @@ public class Entity
         if (newComponents.Count == 0)
             return;
 
+        components.AddRange(newComponents);
+
         for (int i = 0; i < newComponents.Count; i++)
         {
             newComponents[i].Start();
         }
 
-        components.AddRange(newComponents);
         newComponents.Clear();
     }
 

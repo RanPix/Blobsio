@@ -16,6 +16,8 @@
     <None Remove="Recources\Configs\config.cfg" />
     <None Remove="Recources\defaultConfig.cfg" />
     <None Remove="Recources\Fonts\arial.ttf" />
+    <None Remove="Recources\Sounds\pop1.mp3" />
+    <None Remove="Recources\Sounds\pop2.ogg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +29,8 @@
     <EmbeddedResource Include="Recources\Configs\config.cfg" />
     <EmbeddedResource Include="Recources\Configs\defaultConfig.cfg" />
     <EmbeddedResource Include="Recources\Fonts\arial.ttf" />
+    <EmbeddedResource Include="Recources\Sounds\pop1.mp3" />
+    <EmbeddedResource Include="Recources\Sounds\pop2.ogg" />
   </ItemGroup>
 
   <ItemGroup>

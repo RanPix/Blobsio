@@ -7,7 +7,7 @@ static class Program
 {
     private static List<Entity> entities = new List<Entity>()
     {
-        new GameStartupSpawner(),
+        new StartupSpawner(),
     };
 
     static void Main()

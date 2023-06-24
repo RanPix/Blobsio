@@ -1,4 +1,4 @@
-global using Time = Blobsio.Core.Time;
+﻿global using Time = Blobsio.Core.Time;
 using Blobsio.Core.Entities;
 using Blobsio.Recources;
 using SFML.Graphics;

@@ -31,7 +31,7 @@ public class Food : Entity
         anim.Setup(RecourcesManager.GetAnimationTexture("point"), 8, 0.4f, 2);
 
         collider = size + 5;
-        //processCollision = false;
+        processCollision = false;
 
         speed *= size * 0.2f;
 

@@ -17,10 +17,7 @@ public class Blob : Entity
     public (string name, int size, float frameTime, int framesCount)[] animations = 
         { ("blob", 16, 0.1f, 4), ("rain", 16, 0.07f, 4), ("glavie", 16, 0.1f, 8) };
 
-    public Blob(List<Component> components) : base(components)
-    {
-        this.components = components;
-    }
+    public Blob(List<Component> components) : base(components) { }
 
     public override void Start()
     {
@@ -38,6 +35,7 @@ public class Blob : Entity
         graphic.Origin = new Vector2f(size, size);
 
         int animIndex = Rand.rand.Next(animations.Length);
+
         GetComponent<Animation>().Setup(RecourcesManager.GetAnimationTexture(animations[animIndex].name), animations[animIndex].size, animations[animIndex].frameTime, animations[animIndex].framesCount);
 
         Respawn();
@@ -46,8 +44,6 @@ public class Blob : Entity
     public override void OnCollision(Entity collision)
     {
         base.OnCollision(collision);
-
-        Console.WriteLine(collision.tag[0]);
 
         if (collision.tag == "Blob")
         {
@@ -63,6 +59,11 @@ public class Blob : Entity
         if (collision.tag == "Food")
         {
             if (tag == "Player")
+            {
+                AudioSystem.PlaySoundOnce("pop", GetComponent<AudioSource>().clip);
+                //Sound sound = new Sound(RecourcesManager.GetSoundBuffer("pop2"));
+                //sound.Play();
+            }
 
             Food point = (Food)collision;
             point.Respawn();

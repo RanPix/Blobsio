@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using SFML.Audio;
+using SFML.Graphics;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
 
@@ -34,5 +35,17 @@ public static class RecourcesManager
         }
 
         return t;
+    }
+
+    public static SoundBuffer GetSoundBuffer(string name)
+    {
+        SoundBuffer sb;
+
+        using (Stream stream = assembly.GetManifestResourceStream($"Blobsio.Recources.Sounds.{name}.ogg"))
+        {
+            sb = new SoundBuffer(stream);
+        }
+
+        return sb;
     }
 }
