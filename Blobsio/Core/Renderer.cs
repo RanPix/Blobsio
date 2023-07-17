@@ -28,7 +28,7 @@ public class Renderer
         window.Closed += new EventHandler(OnClose);
         window.Resized += new EventHandler<SizeEventArgs>(OnResize);
 
-        window.SetFramerateLimit(165);
+        //window.SetFramerateLimit(165);
 
         mainCamera.Reset(new FloatRect(0, 0, windowX, windowY));
 

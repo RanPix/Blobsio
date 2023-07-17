@@ -53,8 +53,8 @@ public class Input
 
         Vector2f input = new Vector2f();
 
-        //input = GetKeyboardMovement();
-        input = GetMouseMovementInput();
+        input = GetKeyboardMovement();
+        //input = GetMouseMovementInput();
 
         if (input != new Vector2f())
             MovementInput.Invoke(input);

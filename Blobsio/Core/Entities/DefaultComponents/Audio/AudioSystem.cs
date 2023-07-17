@@ -1,6 +1,6 @@
 ﻿using Blobsio.Core.Entities;
 
-namespace Blobsio.Assets;
+namespace Blobsio.Core.Entities;
 
 public class AudioSystem : Entity
 {

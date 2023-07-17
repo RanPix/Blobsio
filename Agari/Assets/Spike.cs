@@ -23,11 +23,10 @@ public class Spike : Entity
         //shape.FillColor = new Color(100, 100, 100);
 
         graphic = shape;
-        collider = radius;
         graphic.Origin = new Vector2f(radius, radius);
 
-        collider = radius;
-        position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+        AddComponent<Collider>().radius = radius;
+        position = new Vector2f(Rand.Next(0, Engine.MAP_SIZE), Rand.Next(0, Engine.MAP_SIZE));
 
 
         Animation anim = GetComponent<Animation>();
@@ -36,6 +35,6 @@ public class Spike : Entity
 
     public void Respawn()
     {
-        position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+        position = new Vector2f(Rand.Next(0, Engine.MAP_SIZE), Rand.Next(0, Engine.MAP_SIZE));
     }
 }

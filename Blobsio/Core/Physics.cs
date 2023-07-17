@@ -5,47 +5,89 @@ namespace Blobsio.Core;
 
 public class Physics
 {
-    public void Update(Entity[] objects)
+    public void Update(List<Entity> entities)
     {
-        //List<List<int>> collisions = DetectPossibleCollisions(objects);
+        //List<(Entity, Entity)> collisions = DetectPossibleCollisions(objects);
 
-        //foreach (List<int> collision in collisions)
+        //foreach ((Entity, Entity) collision in collisions)
         //{
-        //    //Console.WriteLine(collision.Count);
-        //    for (int i = 0; i < collision.Count; i++)
+        //    //if (!objects[i].processCollision)
+        //    //    continue;
+
+        //    if (CheckCollision(collision.Item1.collider, collision.Item1.position, collision.Item2.collider, collision.Item2.position))
         //    {
-        //        //Console.Write(collision[i]);
-        //        for (int j = 0; j < collision.Count; j++)
+        //        collision.Item1.OnCollision(collision.Item2);
+        //        collision.Item2.OnCollision(collision.Item1);
+        //    }
+        //}
+
+        ProcessCollisionNew(entities);
+
+        //for (int i = 0; i < entities.Length; i++)
+        //{
+        //    if (!entities[i].processCollision)
+        //        continue;
+
+        //    for (int j = 0; j < entities.Length; j++)
+        //    {
+        //        if (i == j)
+        //            continue;
+
+        //        if (CheckCollision(entities[i].collider, entities[i].position, entities[j].collider, entities[j].position))
         //        {
-        //            if (i == j)
-        //                continue;
+        //            entities[i].OnCollision(entities[j]);
+        //        }
+        //    }
+        //}
+    }
 
-        //            if (!objects[i].processCollision)
-        //                continue;
+    private void ProcessCollisionNew(List<Entity> entities)
+    {
+        //List<Collider> colliders = GetEntityColliders(entities);
 
-        //            if (CheckCollision(objects[i].collider, objects[i].position, objects[j].collider, objects[j].position))
-        //            {
-        //                objects[i].OnCollision(objects[j]);
-        //            }
+        //for (int i = 0; i < colliders.Count; i++)
+        //{
+        //    for (int j = 0; j < colliders.Count; j++)
+        //    {
+        //        if (i == j)
+        //            continue;
 
-        //            Console.WriteLine();
+        //        if (!colliders[i].processCollision)
+        //            continue;
+
+        //        if (CheckCollision(colliders[i].radius, colliders[i].entity.position, colliders[j].radius, colliders[j].entity.position))
+        //        {
+        //            colliders[i].entity.OnCollision(colliders[j].entity);
         //        }
         //    }
         //}
 
-        for (int i = 0; i < objects.Length; i++)
+        Collider coll1 = null;
+        Collider coll2 = null;
+
+        for (int i = 0; i < entities.Count; i++)
         {
-            for (int j = 0; j < objects.Length; j++)
+            if (!entities[i].processCollision)
+                continue;
+
+            coll1 = entities[i].GetComponent<Collider>();
+
+            if (coll1 == null)
+                continue;
+
+            for (int j = 0; j < entities.Count; j++)
             {
                 if (i == j)
                     continue;
 
-                if (!objects[i].processCollision)
+                coll2 = entities[j].GetComponent<Collider>();
+
+                if (coll2 == null)
                     continue;
 
-                if (CheckCollision(objects[i].collider, objects[i].position, objects[j].collider, objects[j].position))
+                if (CheckCollision(coll1.radius, entities[i].position, coll2.radius, entities[j].position))
                 {
-                    objects[i].OnCollision(objects[j]);
+                    entities[i].OnCollision(entities[j]);
                 }
             }
         }
@@ -61,54 +103,75 @@ public class Physics
 
         float separation2 = (xSeparation * xSeparation) + (ySeparation * ySeparation);
 
-        if (separation2 < minDistance2)
-            return true;
+        //Console.WriteLine(separation2 < minDistance2);
 
-        return false;
+        return separation2 < minDistance2;
     }
 
-    private List<List<int>> DetectPossibleCollisions(Entity[] objects) // Sweep and Prune method
-    {
-        List<List<int>> possibleCollisions = new List<List<int>>();
-        List<int> active = new List<int>() { 0 };
-        Entity[] colliders = new Entity[objects.Length];
+    //private List<(Entity, Entity)> DetectPossibleCollisions(Entity[] objects) // Sweep and Prune method
+    //{
+    //    Entity[] colliders = new Entity[objects.Length];
 
-        for (int i = 0; i < objects.Length; i++)
-            colliders[i] = objects[i];
+    //    for (int i = 0; i < objects.Length; i++)
+    //        colliders[i] = objects[i];
 
-        SortCollidersAlongAxis(colliders);
+    //    Array.Sort(colliders);
+    //    //SortCollidersAlongAxis(colliders);
 
-        int lastActive = 0;
-        for (int i = 1; i < colliders.Length; i++)
-        {
-            for (int j = 0; j < active.Count; j++)
-            {
-                if (j - 1 !> i)
-                    break;
+    //    List<(Entity, Entity)> possiblePairs = CheckForPossiblePairsIL(colliders);
 
-                if (BoundingAxisCollision(colliders[active[j]].position.X, colliders[active[j]].collider, colliders[i].position.X, colliders[i].collider))
-                {
+    //    return possiblePairs;
+    //}
 
-                    active.Add(i);
-                    Console.WriteLine(true);
-                    continue;
-                }
+    //private List<(Entity, Entity)> CheckForPossiblePairsIL(IEnumerable<Entity> entities)
+    //{
+    //    List<(Entity, Entity)> possiblePairs = new();
+    //    List<Entity> currentPool = new();
+    //    Queue<Entity> deletionQueue = new();
 
-                break;
-            }
+    //    foreach (var _entity in entities)
+    //    {
+    //        for (int i = 0; i < currentPool.Count; i++)
+    //        {
+    //            if (BoundingAxisCollision(_entity, currentPool[i]))
+    //                possiblePairs.Add((currentPool[i], _entity));
+    //            else
+    //                deletionQueue.Enqueue(currentPool[i]);
+    //        }
 
-            lastActive = i;
+    //        while (deletionQueue.Count > 0)
+    //        {
+    //            if (deletionQueue.Count <= 0) 
+    //                break;
 
-            foreach (int activea in active)
-                Console.WriteLine(activea);
+    //            Entity index = deletionQueue.Dequeue();
+    //            currentPool.Remove(index);
+    //        }
 
-            possibleCollisions.Add(active);
-            active.Clear();
-            active.Add(i);
-        }
+    //        currentPool.Add(_entity);
+    //    }
 
-        return possibleCollisions;
-    }
+    //    return possiblePairs;
+    //}
+
+    //private List<(Entity, Entity)> CheckForPossiblePairsIL(Entity[] entities)
+    //{
+    //    List<(Entity, Entity)> possiblePairs = new();
+    //    int poolCount = 0;
+
+    //    for (int i = 0; i < entities.Length; i++)
+    //    {
+    //        for (int j = poolCount; j < i; j++)
+    //        {
+    //            if (BoundingAxisCollision(entities[i], entities[j]))
+    //                possiblePairs.Add((entities[i], entities[j]));
+    //            else
+    //                poolCount++;
+    //        }
+    //    }
+
+    //    return possiblePairs;
+    //}
 
     private bool BoundingAxisCollision(float pos1, float size1, float pos2, float size2)
     {
@@ -118,8 +181,11 @@ public class Physics
         float coll2Left = pos2 - size2;
         float coll2Right = pos2 + size2;
 
-        return coll1Left < coll2Right && coll1Right > coll2Left;
+        return (coll1Left > coll2Left && coll2Left < coll1Right) || (coll1Left < coll2Right && coll2Right > coll1Right);
     }
+
+    //private bool BoundingAxisCollision(Entity col1, Entity col2)
+    //    => BoundingAxisCollision(col1.position.X, col1.collider, col2.position.X, col2.collider);
 
     private void SortCollidersAlongAxis(Entity[] colliders)
     {

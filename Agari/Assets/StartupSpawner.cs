@@ -13,9 +13,9 @@ public class StartupSpawner : Entity
     {
         base.Start();
 
-        Instantiate(new AudioSystem(new List<AudioClipID>() { new AudioClipID(new AudioClip("pop2"), "pop") }));
+        //Instantiate(new AudioSystem(new List<AudioClipID>() { new AudioClipID(new AudioClip("pop2"), "pop") }));
 
-        Instantiate(new Blob(new List<Component>() { new BlobPlayerController(), new Animation(), new AudioSource("pop2"), new AudioSourceID("pop") }));
+        Instantiate(new Blob(new List<Component>() { new BlobPlayerController(), new Animation() }));//, new Animation(), new AudioSource("pop2"), new AudioSourceID("pop") }));
 
         for (int i = 0; i < playersAmount; i++)
         {

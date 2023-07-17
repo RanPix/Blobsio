@@ -10,7 +10,7 @@ public static class RecourcesManager
 
     public static Font GetFont(string name)
     {
-        using (Stream stream = assembly.GetManifestResourceStream("Blobsio.Recources.Fonts" + name))
+        using (Stream stream = assembly.GetManifestResourceStream("Agari.Recources.Fonts" + name))
         {
             return new Font(stream);
         }
@@ -18,17 +18,17 @@ public static class RecourcesManager
 
 
     public static Stream GetDefaultConfig(string name)
-        => assembly.GetManifestResourceStream("Blobsio.Recources.Configs.defaultConfig.cfg");
+        => assembly.GetManifestResourceStream("Agari.Recources.Configs.defaultConfig.cfg");
 
     public static Stream GetConfig(string name)
-        => assembly.GetManifestResourceStream($"Blobsio.Recources.Configs.{name}.cfg");
+        => assembly.GetManifestResourceStream($"Agari.Recources.Configs.{name}.cfg");
 
 
     public static Texture GetAnimationTexture(string name)
     {
         Texture t;
 
-        using (Stream stream = assembly.GetManifestResourceStream($"Blobsio.Recources.Animations.{name}.png"))
+        using (Stream stream = assembly.GetManifestResourceStream($"Agari.Recources.Animations.{name}.png"))
         {
             t = new Texture(stream);
         }
@@ -40,7 +40,7 @@ public static class RecourcesManager
     {
         SoundBuffer sb;
 
-        using (Stream stream = assembly.GetManifestResourceStream($"Blobsio.Recources.Sounds.{name}.ogg"))
+        using (Stream stream = assembly.GetManifestResourceStream($"Agari.Recources.Sounds.{name}.ogg"))
         {
             sb = new SoundBuffer(stream);
         }

@@ -2,7 +2,6 @@ using Blobsio.Core;
 using SFML.System;
 using SFML.Graphics;
 using Blobsio.Recources;
-using SFML.Audio;
 using Blobsio.Core.Entities;
 
 namespace Blobsio.Assets;
@@ -13,6 +12,8 @@ public class Blob : Entity
 
     private int size = 20;
     public float speed = 700;
+
+    private Collider collider;
 
     public (string name, int size, float frameTime, int framesCount)[] animations = 
         { ("blob", 16, 0.1f, 4), ("rain", 16, 0.07f, 4), ("glavie", 16, 0.1f, 8) };
@@ -30,7 +31,10 @@ public class Blob : Entity
         CircleShape shape = new CircleShape(size, 200);
         shape.OutlineThickness = 1f;
         graphic = shape;
-        collider = size * 0.8f;
+
+        collider = AddComponent<Collider>();
+        collider.radius = size;
+
         position = position;
         graphic.Origin = new Vector2f(size, size);
 
@@ -60,7 +64,7 @@ public class Blob : Entity
         {
             if (tag == "Player")
             {
-                AudioSystem.PlaySoundOnce("pop", GetComponent<AudioSource>().clip);
+                //AudioSystem.PlaySoundOnce("pop", GetComponent<AudioSource>().clip);
                 //Sound sound = new Sound(RecourcesManager.GetSoundBuffer("pop2"));
                 //sound.Play();
             }
@@ -86,12 +90,12 @@ public class Blob : Entity
 
         if (position.X - size > 0f && velocity.X < 0f)
             newVelocity.X += velocity.X;
-        if (position.X + size < Game.MAP_SIZE && velocity.X > 0f)
+        if (position.X + size < Engine.MAP_SIZE && velocity.X > 0f)
             newVelocity.X += velocity.X;
 
         if (position.Y - size > 0f && velocity.Y < 0f)
             newVelocity.Y += velocity.Y;
-        if (position.Y + size < Game.MAP_SIZE && velocity.Y > 0f)
+        if (position.Y + size < Engine.MAP_SIZE && velocity.Y > 0f)
             newVelocity.Y += velocity.Y;
 
         return newVelocity;
@@ -119,7 +123,7 @@ public class Blob : Entity
         graphic = currentGraphic;
         graphic.Origin = new Vector2f(size, size);
 
-        collider = size * 0.8f;
+        collider.radius = size;
 
         //cameraFOV = 1 + size / 1000 * 0.2f;
         //Console.WriteLine(cameraFOV);
@@ -132,8 +136,8 @@ public class Blob : Entity
         AddSize(0);
 
         int animIndex = Rand.rand.Next(animations.Length);
-        GetComponent<Animation>().Setup(RecourcesManager.GetAnimationTexture(animations[animIndex].name), animations[animIndex].size, animations[animIndex].frameTime, animations[animIndex].framesCount);
+        //GetComponent<Animation>().Setup(RecourcesManager.GetAnimationTexture(animations[animIndex].name), animations[animIndex].size, animations[animIndex].frameTime, animations[animIndex].framesCount);
 
-        position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+        position = new Vector2f(Rand.Next(0, Engine.MAP_SIZE), Rand.Next(0, Engine.MAP_SIZE));
     }
 }

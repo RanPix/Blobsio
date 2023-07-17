@@ -2,7 +2,6 @@
 using SFML.System;
 using SFML.Graphics;
 using Blobsio.Recources;
-using SFML.Audio;
 using Blobsio.Core.Entities;
 
 namespace Blobsio.Assets;
@@ -27,16 +26,18 @@ public class Food : Entity
         graphic = new CircleShape(size + 5, 10);
         graphic.Origin = new Vector2f(size + 5, size + 5);
 
-        Animation anim = AddComponent<Animation>();
-        anim.Setup(RecourcesManager.GetAnimationTexture("point"), 8, 0.4f, 2);
+        //Animation anim = AddComponent<Animation>();
+        //anim.Setup(RecourcesManager.GetAnimationTexture("point"), 8, 0.4f, 2);
 
-        collider = size + 5;
+        Collider coll = AddComponent<Collider>();
+        coll.radius = size;
+        coll.processCollision = false;
         processCollision = false;
 
         speed *= size * 0.2f;
 
         if (canRespawn)
-            position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+            position = new Vector2f(Rand.Next(0, Engine.MAP_SIZE), Rand.Next(0, Engine.MAP_SIZE));
     }
 
     public override void Update()
@@ -55,7 +56,7 @@ public class Food : Entity
     {
 
         if (canRespawn)
-            position = new Vector2f(Rand.Next(0, Game.MAP_SIZE), Rand.Next(0, Game.MAP_SIZE));
+            position = new Vector2f(Rand.Next(0, Engine.MAP_SIZE), Rand.Next(0, Engine.MAP_SIZE));
 
         else // мені було ліньки думати
             Destroy(this);

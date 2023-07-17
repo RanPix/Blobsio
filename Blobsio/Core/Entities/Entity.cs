@@ -3,14 +3,14 @@ using SFML.System;
 
 namespace Blobsio.Core.Entities;
 
-public class Entity
+public class Entity //: IComparable<Entity>
 {
-    internal Game world { get; private set; }
+    internal Engine world { get; private set; }
 
     public Tag<string> tag = new Tag<string>();
     public Transformable graphic = new Transformable();
 
-    public float collider;
+    //public float collider;
     public bool processCollision = true;
 
     private Vector2f _position;
@@ -43,35 +43,35 @@ public class Entity
         this.graphic = graphic;
     }
 
-    public Entity(string tag = "", float collider = 0f, bool processCollision = true, Vector2f position = new Vector2f())
+    public Entity(string tag = "", /*float collider = 0f,*/ bool processCollision = true, Vector2f position = new Vector2f())
     {
         this.tag += tag;
-        this.collider = collider;
+        //this.collider = collider;
         this.processCollision = processCollision;
         this.position = position;
     }
-    public Entity(List<Component> components, string tag = "", float collider = 0f, bool processCollision = true, Vector2f position = new Vector2f())
+    public Entity(List<Component> components, string tag = "", /*float collider = 0f,*/ bool processCollision = true, Vector2f position = new Vector2f())
     {
         newComponents = components;
         this.tag += tag;
-        this.collider = collider;
+        //this.collider = collider;
         this.processCollision = processCollision;
         this.position = position;
     }
 
-    public Entity(List<Component> components, Transformable graphic, string tag = "", float collider = 0f, bool processCollision = true, Vector2f position = new Vector2f())
+    public Entity(List<Component> components, Transformable graphic, string tag = "", /*float collider = 0f,*/ bool processCollision = true, Vector2f position = new Vector2f())
     {
         newComponents = components;
         this.graphic = graphic;
         this.tag += tag;
-        this.collider = collider;
+        //this.collider = collider;
         this.processCollision = processCollision;
         this.position = position;
     }
 
     #endregion
 
-    public void OnInstantiate(Game g)
+    public void OnInstantiate(Engine g)
     {
         world = g;
 
@@ -91,24 +91,6 @@ public class Entity
         AddNewComponents();
     }
 
-    public virtual void Update()
-    {
-        AddNewComponents();
-
-        for (int i = 0; i < components.Count; i++)
-        {
-            components[i].Update();
-        }
-    }
-
-    public virtual void LateUpdate()
-    {
-        for (int i = 0; i < components.Count; i++)
-        {
-            components[i].LateUpdate();
-        }
-    }
-
     internal void AddNewComponents()
     {
         if (newComponents.Count == 0)
@@ -122,6 +104,30 @@ public class Entity
         }
 
         newComponents.Clear();
+    }
+
+    public virtual void FixedUpdate()
+    {
+        for (int i = 0; i < components.Count; i++)
+        {
+            components[i].FixedUpdate();
+        }
+    }
+
+    public virtual void Update()
+    {
+        for (int i = 0; i < components.Count; i++)
+        {
+            components[i].Update();
+        }
+    }
+
+    public virtual void LateUpdate()
+    {
+        for (int i = 0; i < components.Count; i++)
+        {
+            components[i].LateUpdate();
+        }
     }
 
     internal void Destroy()
@@ -194,4 +200,12 @@ public class Entity
     {
         return world.FindEntitiesByTag(tag);
     }
+
+    //public int CompareTo(Entity? obj)
+    //{
+    //    if (obj == null)
+    //        throw new NullReferenceException();
+
+    //    return (int)(position.X - obj.position.X);
+    //}
 }

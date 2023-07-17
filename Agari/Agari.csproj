@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -32,9 +32,9 @@
     <EmbeddedResource Include="Recources\Sounds\pop1.mp3" />
     <EmbeddedResource Include="Recources\Sounds\pop2.ogg" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="SFML.Net" Version="2.5.0" />
+    <ProjectReference Include="..\Blobsio\Blobsio.csproj" />
   </ItemGroup>
 
 </Project>
